@@ -16,7 +16,7 @@
   let messages: Message[] = $state([]);
 
   onMount(() => {
-    socket = io(PUBLIC_DEV ? "http://localhost:3000" : "https://chat-jippity-server.onrender.com");
+    socket = io(PUBLIC_DEV === "true" ? "http://localhost:3000" : "https://chat-jippity-server.onrender.com");
 
     document.addEventListener("keypress", (event: KeyboardEvent) => {
       if (event.key === "Enter" && message.length > 0) {
