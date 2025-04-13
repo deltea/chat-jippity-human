@@ -15,6 +15,7 @@
   let roomId = "";
   let generating = $state(false);
   let messages: Message[] = $state([]);
+  let reasoning = $state(false);
 
   onMount(() => {
     socket = io(PUBLIC_DEV === "true" ? "http://localhost:3000" : "wss://chat-jippity-server.onrender.com", { transports: ["websocket"] });
@@ -53,7 +54,7 @@
 
   function send() {
     if (message.length > 0) {
-      socket.emit("send-message", { roomId, message });
+      socket.emit("send-message", { roomId, message, reasoning });
       messages.push({ bot: false, text: message });
       message = "";
       generating = true;
@@ -87,13 +88,13 @@
         {#each messages as m}
           {#if m.bot}
             <div class="flex w-full justify-start">
-              <div class="rounded-3xl px-6 py-3 h-16 flex items-center">
+              <div class="rounded-3xl px-6 py-3 h-16 flex">
                 <Typewriter target={m.text} />
               </div>
             </div>
           {:else}
             <div class="flex w-full justify-end">
-              <div class="rounded-3xl bg-bg-1 px-5 py-3 flex items-center">
+              <div class="rounded-3xl bg-bg-1 px-5 py-3 flex">
                 <p>{m.text}</p>
               </div>
             </div>
@@ -116,8 +117,8 @@
           <h2 class="text-3xl font-semibold mb-2">What can I help with?</h2>
         {/if}
 
-        <div class="rounded-4xl bg-bg-1 px-6 py-3 w-[40rem] h-16">
-          <form on:submit|preventDefault={send} class="flex gap-4 h-full">
+        <div class="rounded-4xl bg-bg-1 px-6 py-4 w-[40rem]">
+          <form on:submit|preventDefault={send} class="flex flex-col gap-4 h-full">
             <input
               type="text"
               name="message"
@@ -128,13 +129,24 @@
               disabled={generating}
             >
 
-            <button
-              class="rounded-full bg-white text-bg h-full aspect-square flex justify-center items-center hover:brightness-75 hover:cursor-pointer"
-              aria-label="send"
-              type="submit"
-            >
-              <iconify-icon icon="mingcute:arrow-up-fill" class="text-2xl"></iconify-icon>
-            </button>
+            <div class="flex items-center justify-between">
+              <button
+                type="button"
+                on:click={() => (reasoning = !reasoning)}
+                class="flex items-center gap-1 px-2.5 py-1.5 rounded-full cursor-pointer border-2 {reasoning ? "bg-accent text-accent-1 border-accent" : "border-border"}"
+              >
+                <iconify-icon icon="mingcute:bulb-2-line" class="text-xl"></iconify-icon>
+                <span class="text-sm">Reason</span>
+              </button>
+
+              <button
+                class="rounded-full bg-white text-bg h-full aspect-square flex justify-center items-center hover:brightness-75 hover:cursor-pointer"
+                aria-label="send"
+                type="submit"
+              >
+                <iconify-icon icon="mingcute:arrow-up-fill" class="text-2xl"></iconify-icon>
+              </button>
+            </div>
           </form>
         </div>
 

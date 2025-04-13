@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import { fade } from "svelte/transition";
 
-  const speed = 20;
+  const speed = 15;
   let i = 0;
   let text = $state("");
 	let { target, onEnd, onStart }: {
@@ -32,10 +32,10 @@
   });
 </script>
 
-<p class="flex items-center gap-1">
-  <span>{text}</span>
+<p>
+  {text}
 
   {#if !ended}
-    <span class="rounded-full bg-fg size-4 animate-pulse" transition:fade={{ duration: 200 }}></span>
+    <span class="inline-block" transition:fade={{ duration: 200 }}>⚪</span>
   {/if}
 </p>
