@@ -50,6 +50,7 @@
         console.log("partner left");
         socket.emit("find-match", { type: "human" });
         connecting = true;
+        reset();
       });
 
       socket.on("disconnect", () => {
@@ -57,6 +58,12 @@
       });
     });
   });
+
+  function reset() {
+    roomId = "";
+    message = "";
+    messages = [];
+  }
 </script>
 
 <main class="h-screen bg-bg text-white flex flex-col items-center gap-4">
