@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import { io, Socket } from "socket.io-client";
   import { PUBLIC_DEV } from "$env/static/public";
+  import Typewriter from "$lib/components/Typewriter.svelte";
 
   interface Message {
     bot: boolean;
@@ -75,7 +76,7 @@
   {:else}
     <nav class="flex h-16 items-center px-4 gap-4 w-full">
       <button class="rounded-lg hover:bg-bg-1 flex justify-center items-center size-10 hover:cursor-pointer" aria-label="menu">
-        <iconify-icon icon="mingcute:sparkles-2-line" class="text-2xl"></iconify-icon>
+        <iconify-icon icon="mingcute:pencil-2-line" class="text-2xl"></iconify-icon>
       </button>
 
       <h1 class="text-xl font-semibold">ChatJippity</h1>
@@ -87,7 +88,7 @@
           {#if m.bot}
             <div class="flex w-full justify-start">
               <div class="rounded-3xl px-6 py-3 h-16 flex items-center">
-                <p>{m.text}</p>
+                <Typewriter target={m.text} />
               </div>
             </div>
           {:else}

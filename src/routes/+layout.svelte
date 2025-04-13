@@ -6,7 +6,7 @@
 </script>
 
 <svelte:head>
-  <title>ChatJippity - Human</title>
+  <title>ChatJippity</title>
 </svelte:head>
 
 {@render children()}
