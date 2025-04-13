@@ -19,15 +19,6 @@
   onMount(() => {
     socket = io(PUBLIC_DEV === "true" ? "http://localhost:3000" : "wss://chat-jippity-server.onrender.com", { transports: ["websocket"] });
 
-    document.addEventListener("keypress", (event: KeyboardEvent) => {
-      if (event.key === "Enter" && message.length > 0) {
-        socket.emit("send-message", { roomId, message });
-        messages.push({ bot: false, text: message });
-        message = "";
-        generating = true;
-      }
-    });
-
     socket.on("connect", () => {
       console.log("connected to server with id: ", socket.id);
 
@@ -60,6 +51,15 @@
     });
   });
 
+  function send() {
+    if (message.length > 0) {
+      socket.emit("send-message", { roomId, message });
+      messages.push({ bot: false, text: message });
+      message = "";
+      generating = true;
+    }
+  }
+
   function reset() {
     roomId = "";
     message = "";
@@ -67,7 +67,7 @@
   }
 </script>
 
-<main class="h-screen bg-bg text-white flex flex-col items-center gap-4">
+<main class="h-screen flex flex-col items-center gap-4">
   {#if connecting}
     <div class="flex justify-center items-center h-full gap-4">
       <iconify-icon icon="mingcute:loading-3-fill" class="text-2xl animate-spin"></iconify-icon>
@@ -116,20 +116,26 @@
           <h2 class="text-3xl font-semibold mb-2">What can I help with?</h2>
         {/if}
 
-        <div class="rounded-4xl bg-bg-1 px-6 py-3 w-[40rem] h-16 flex gap-4">
-          <input
-            type="text"
-            name="message"
-            id="message"
-            class="outline-none grow"
-            bind:value={message}
-            placeholder="Ask anything"
-            disabled={generating}
-          >
+        <div class="rounded-4xl bg-bg-1 px-6 py-3 w-[40rem] h-16">
+          <form on:submit|preventDefault={send} class="flex gap-4 h-full">
+            <input
+              type="text"
+              name="message"
+              id="message"
+              class="outline-none grow"
+              bind:value={message}
+              placeholder="Ask anything"
+              disabled={generating}
+            >
 
-          <button class="rounded-full bg-white text-bg h-full aspect-square flex justify-center items-center" aria-label="send">
-            <iconify-icon icon="mingcute:arrow-up-fill" class="text-2xl"></iconify-icon>
-          </button>
+            <button
+              class="rounded-full bg-white text-bg h-full aspect-square flex justify-center items-center hover:brightness-75 hover:cursor-pointer"
+              aria-label="send"
+              type="submit"
+            >
+              <iconify-icon icon="mingcute:arrow-up-fill" class="text-2xl"></iconify-icon>
+            </button>
+          </form>
         </div>
 
         <p class="text-muted text-xs">ChatJippity doesn't make mistakes. No need to check important info.</p>

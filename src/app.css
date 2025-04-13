@@ -10,3 +10,7 @@
 
   /* --font-sans: "Open Sans", sans-serif; */
 }
+
+body {
+  @apply bg-bg text-fg;
+}
